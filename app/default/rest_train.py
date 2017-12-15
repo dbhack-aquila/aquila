@@ -4,6 +4,7 @@ import wikipedia
 import json
 from flask import jsonify
 import re
+import os
 
 wikipedia.set_lang("de")
 def get_first_image(wikipedia_page):
@@ -25,7 +26,7 @@ def get_first_image(wikipedia_page):
 
 @default.route('/gps/<int:trainid>/<int:time>')
 def browse(trainid, time):
-    path = "C:\\Users\\PaulBauriegel\\Downloads\\20171212_wifionice\\surveyor_hackathon_data_20171212.csv"
+    path = os.path.dirname(os.path.abspath(__file__)) + "/surveyor_hackathon_data_20171212.csv"
     df = pd.read_csv(path, sep=';', decimal='.', skiprows=0, nrows=100)    # Read one row
     # TODO sort by time
     df = df[df['sid'] == trainid]
