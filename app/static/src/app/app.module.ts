@@ -4,26 +4,35 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import 'hammerjs';
 import { RouterModule, Routes } from '@angular/router';
+import { StartComponent } from './start/start.component';
+import { DetailsComponent } from './details/details.component';
+import { MapComponent } from './map/map.component';
+import { ListComponent } from './list/list.component';
+
+import { DataService } from "./data.service";
 
 
 const appRoutes: Routes = [
     {
         path      : '**',
-        //comonent: [YourImportedComponentClass]
     },
 
 ];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    StartComponent,
+    DetailsComponent,
+    MapComponent,
+    ListComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
 
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
