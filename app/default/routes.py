@@ -5,4 +5,8 @@ def home():
     return default.send_static_file('index.html')
 
 
+@default.route('/test')
+def home():
+    return default.send_static_file('../test_paul/test.html')
+
 
