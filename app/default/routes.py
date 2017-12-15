@@ -6,7 +6,7 @@ def home():
 
 
 @default.route('/test')
-def home():
+def test():
     return default.send_static_file('../test_paul/test.html')
 
 
