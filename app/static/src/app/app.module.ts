@@ -10,6 +10,7 @@ import { MapComponent } from './map/map.component';
 import { ListComponent } from './list/list.component';
 
 import { DataService } from "./data.service";
+import { MessageService } from "./message.service";
 
 
 const appRoutes: Routes = [
@@ -32,7 +33,10 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
 
   ],
-  providers: [DataService],
+  providers: [
+    DataService,
+    MessageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
