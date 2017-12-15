@@ -12,7 +12,7 @@ def get_first_image(wikipedia_page):
             break
     for imagecode_part in imagecode_array:
         if "//" in imagecode_part:
-            return "https://"+imagecode_part
+            return "https:"+imagecode_part
 
 
 if __name__ == "__main__":

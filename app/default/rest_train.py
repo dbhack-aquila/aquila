@@ -15,6 +15,14 @@ def browse(trainid, time):
     df.rename(columns={'gps_laenge': 'trainLongitude', 'gps_breite': 'trainLatitude'}, inplace=True)
     gjson = df.iloc[time].to_dict()
     pois = wikipedia.geosearch(df.iloc[time]['trainLatitude'], df.iloc[time]['trainLongitude'])
-    print(pois)
-    gjson['pois'] = pois
+    poi_list = []
+    for e in pois:
+        npoi = {}
+        npoi['name'] = e
+        npoi['description'] = wikipedia.summary(e)
+        info = limburgerDom = wikipedia.page(e)
+        npoi['latitude'] = float(info.coordinates[0])
+        npoi['longitude'] = float(info.coordinates[1])
+        poi_list.append(npoi)
+    gjson['pois'] = poi_list
     return jsonify(dict(gjson))

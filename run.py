@@ -10,4 +10,13 @@ df = df[df['sid'] == 40117905]
 df = df.filter(items=['gps_breite', 'gps_laenge'])
 df.rename(columns={'gps_laenge': 'longitude', 'gps_breite': 'latitude'}, inplace=True)
 pois = wikipedia.geosearch(df.iloc[0]['latitude'], df.iloc[0]['longitude'])
-print(pois)
+poi_list = []
+for e in pois:
+    npoi = {}
+    npoi['name'] = e
+    npoi['description'] = wikipedia.summary(e)
+    info = limburgerDom = wikipedia.page(e)
+    npoi['latitude'] = info.coordinates[0]
+    npoi['longitude'] = info.coordinates[1]
+    poi_list.append(npoi)
+print(poi_list)
