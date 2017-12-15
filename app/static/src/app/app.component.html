@@ -3,3 +3,9 @@
     {{title}}
   </div>
 </nav>
+
+<app-start *ngIf="view == 'start'" [data]="data"></app-start>
+<app-map *ngIf="view == 'map'" [data]="data"></app-map>
+<app-list *ngIf="view == 'list'" [data]="data"></app-list>
+<app-details *ngIf="view == 'details'" [poi]="data.pois[0]"></app-details>
+
