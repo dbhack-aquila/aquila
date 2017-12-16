@@ -31,11 +31,11 @@ export class MapComponent implements OnInit {
   resizeViewport() {
       let baseWidth = parseInt(this.svgElement.nativeElement.width.baseVal.value);
       let baseHeight = parseInt(this.svgElement.nativeElement.height.baseVal.value);
-      let deltaW = this.zoomStep * baseWidth * this.zoomLevel;
-      let deltaH = this.zoomStep * baseHeight * this.zoomLevel;
+      let deltaW = this.zoomStep * this.zoomLevel * baseWidth;
+      let deltaH = this.zoomStep * this.zoomLevel * baseHeight;
 
-      let x = baseWidth - deltaW;
-      let y = baseHeight - deltaH;
+      let x = baseWidth - (deltaW * 2);
+      let y = baseHeight - (deltaH * 2);
       if (x <= 0 || y <= 0) {
           this.zoomLevel--;
           return;

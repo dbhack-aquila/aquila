@@ -53,8 +53,6 @@ export class AppComponent {
 
   ngOnInit() {
     setInterval(this.sendText(), 20000);
-      this.title = 'ICE 1337';
-      this.view = 'map';
   }
 
   sendText() {
@@ -62,8 +60,10 @@ export class AppComponent {
       this.dataService.get(this.number)
         .subscribe(data => {
             this.data = data
-
             console.log(data)
+                
+            this.title = 'ICE 1337';
+            this.view = 'map';
         }
         , err => {
           console.log(err);
