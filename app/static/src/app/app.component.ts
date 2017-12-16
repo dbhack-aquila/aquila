@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { DataService } from './data.service';
 import { Data } from './data';
+import { Poi } from './poi';
 
 import { MessageService } from './message.service';
 
@@ -20,8 +21,12 @@ import { DetailsComponent } from './details/details.component';
 })
 export class AppComponent {
   title = 'app';
+  view: 'start'|'map'|'list';
+  overlayDetails = false;
+  oldView: string;
+
   data: Data;
-  view: 'start'|'map'|'list'|'details';
+  selectedPoi: Poi;
 
   subscription: Subscription;
 
@@ -31,16 +36,36 @@ export class AppComponent {
       .subscribe(message => {
         switch(message.sender) {
           case 'start_submit':
-            this.data = this.dataService.get(message.data.sid, 17);
+            // never gonna happen :()
+            break;
+          case 'poi_selected':
+            this.selectedPoi = message.data;
             this.title = message.data.name;
-            this.view = 'map';
+            this.overlayDetails = true
             break;
         }
       });
+
+    this.view = 'start';
+    this.title = 'Welcome';
   }
 
   ngOnInit() {
-      this.view = 'details';
-      this.title = "Welcome";
+      this.data = this.dataService.get(17);
+      this.title = 'ICE 1337';
+      this.view = 'map';
+  }
+
+  gotoMap() {
+    this.view = 'map';
+  }
+
+  gotoList() {
+    this.view = 'list';
+  }
+
+  closeDetails() {
+    this.title = 'ICE 1337';
+    this.overlayDetails = false;
   }
 }
