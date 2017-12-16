@@ -15,7 +15,8 @@ wikipedia.set_lang("de")
 def init():
     path = os.path.dirname(os.path.abspath(__file__)) + "/surveyor_hackathon_data_20171212.csv"
     global df
-    df = pd.read_csv(path, sep=';', decimal='.', skiprows=0, nrows=100)  # Read one row
+    df = pd.read_csv(path, sep=';', decimal='.', skiprows=0, nrows=10000)  # Read one row
+    df = df.sort_values('created')
     df = df.filter(items=['sid', 'gps_breite', 'gps_laenge'])
     df.rename(columns={'gps_laenge': 'trainLongitude', 'gps_breite': 'trainLatitude'}, inplace=True)
     # TODO sort by time

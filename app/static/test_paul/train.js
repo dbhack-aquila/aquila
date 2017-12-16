@@ -13,8 +13,8 @@ d3.json('/gps/40117905/1', function (error, data) {
     let dataset = [150, 300, 450, 600];
 
     let svgContainer = d3.select("#train").append("svg")
-      .attr("width", w - 20)
-      .attr("height", h - 20);
+      .attr("width", w - 30)
+      .attr("height", h - 30);
 
     svgContainer.selectAll("circle")
       .data(dataset)
@@ -23,6 +23,9 @@ d3.json('/gps/40117905/1', function (error, data) {
       .attr("class","circ")
       .style("fill", "none")
       .style("stroke", "black")
+      .attr("stroke-opacity", function (d) {
+      return 1 - (((d/150 - 1)/10)*3);
+    })
       .attr("r", function (d) {
         return d;
       })
@@ -86,6 +89,20 @@ d3.json('/gps/40117905/1', function (error, data) {
         .attr("width",24)
         .attr("class","material-icons")
         .text("star");
+       let tex = svgContainer.append("text")
+        .attr("x", originX + (diff.lon / 2))
+        .attr("y", originY + (diff.lat / 2) + 36)
+        .attr("text-anchor","middle")
+        .attr("height",24)
+        .text(data.pois[index].name);
+      let bbox = tex.node().getBBox();
+      let padding = 2;
+      let rect = svgContainer.insert("rect", "text")
+        .attr("x", bbox.x - padding)
+        .attr("y", bbox.y - padding)
+        .attr("width", bbox.width + (padding*2))
+        .attr("height", bbox.height + (padding*2))
+        .style("fill", "white");
     });
 
     svgContainer.append("circle")
@@ -93,10 +110,12 @@ d3.json('/gps/40117905/1', function (error, data) {
       .attr("cy", originY)
       .attr("r", 20)
       .style("fill", "black");
-    svgContainer.append("image")
+
+    svgContainer.append("svg:image")
       .attr("xlink:href", "DerKleineICE.png")
-      .attr("x", originX)
-      .attr("y", originY)
-      .attr("height", "150px");
+      .attr("x", originX - 25)
+      .attr("y", originY - 75)
+      .attr("height", 152.5)
+      .attr("width", 57.75);
   }
 });

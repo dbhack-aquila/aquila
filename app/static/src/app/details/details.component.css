@@ -2,6 +2,10 @@ h1 {
 	font-weight: bold;
 }
 
+i {
+	margin-right: 8px;
+}
+
 #profilePicture {
 	width: 100%;
 }
