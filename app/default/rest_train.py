@@ -42,19 +42,11 @@ def get_first_image(wikipedia_page):
 
 def get_wikidata_id(article):
     """Find the Wikidata ID for a given Wikipedia article."""
-    query_string = "https://de.wikipedia.org/w/api.php?action=query&prop=pageprops&ppprop=wikibase_item&redirects=1&format=json&titles=%s" % article
+    query_string = "https://de.wikipedia.org/w/api.php?action=query&prop=pageprops&ppprop=wikibase_item&redirects=1&format=json&titles=" + article
 
-    ret_val = requests.get(query_string).text
-
-    pprops = json.loads(ret_val)
-
-    if pprops["query"]["pages"]:
-        for _, data in pprops["query"]["pages"].items():
-            wikidata_id = data["pageprops"]["wikibase_item"]
-            return wikidata_id
-    else:
-        print("No page returned.")
-
+    ret = requests.get(query_string).json()
+    id = next(iter(ret["query"]["pages"]))
+    return ret["query"]["pages"][id]["pageprops"]["wikibase_item"]
 
 def get_wikidata_image(wikidata_id):
     """Return the image for the Wikidata item with *wikidata_id*. """
@@ -93,15 +85,12 @@ def get_poi(poi):
     npoi = {}
     urls = []
     npoi['name'] = poi
+    wid = get_wikidata_id(poi)
     info = wikipedia.page(poi)
     npoi['description'] = info.summary # get_wikidata_desc(poi)
-    try:
-        cord = info.coordinates
-    except:
-        cord = [lat, lon]
-    npoi['latitude'] = float(cord[0])
-    npoi['longitude'] = float(cord[1])
-    npoi['imageUrl'] = get_first_image(info)
+    npoi['latitude'] = float(lat)
+    npoi['longitude'] = float(lon)
+    npoi['imageUrl'] = get_wikidata_image(wid)
     urls.append(info.url)
     npoi['linkUrls'] = urls
     return npoi
@@ -113,7 +102,7 @@ def browse(trainid, time):
     gjson = df_temp.iloc[time].to_dict()
 
     result = requests.get("http://api.wikunia.de/sights/api.php?lat=" + str(df_temp.iloc[time]['trainLatitude']) + "&lon=" + str(df_temp.iloc[time]['trainLongitude']) + "&rad=0.05&limit=10")
-    print( str(df_temp.iloc[time]['trainLatitude']), str(df_temp.iloc[time]['trainLongitude']))
+    print(str(df_temp.iloc[time]['trainLatitude']), str(df_temp.iloc[time]['trainLongitude']))
     rJson = json.loads(result.text)
     pois=[]
     print(rJson)
