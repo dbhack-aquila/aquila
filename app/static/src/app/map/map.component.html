@@ -1,1 +1,14 @@
-<div id="train"></div>
+<svg id="train" #train [attr.viewBox]="viewportSizeStr"></svg>
+
+<div style="display: flex; flex-flow: column; position: fixed; top: 100px; right: 10px;">
+    <a class="button" style="margin-bottom: 7px;" (click)="zoomIn()">
+        <span class="icon is-small">
+            <i class="fa fa-plus"></i>
+        </span>
+    </a>
+    <a class="button" (click)="zoomOut()">
+        <span class="icon is-small">
+            <i class="fa fa-minus"></i>
+        </span>
+    </a>
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
 import * as d3 from 'd3/index';
 
@@ -14,24 +14,61 @@ export class MapComponent implements OnInit {
 
     @Input() data: Data;
 
+    @ViewChild('train') svgElement;
+
+    zoomStep = 0.1;
+    zoomLevel = 0;
+    viewportSizeStr: string;
+
   constructor() { }
 
   ngOnInit() {
       this.draw(this.data);
+
+      this.resizeViewport();
   }
+
+  resizeViewport() {
+      let baseWidth = parseInt(this.svgElement.nativeElement.width.baseVal.value);
+      let baseHeight = parseInt(this.svgElement.nativeElement.height.baseVal.value);
+      let deltaW = this.zoomStep * baseWidth * this.zoomLevel;
+      let deltaH = this.zoomStep * baseHeight * this.zoomLevel;
+
+      let x = baseWidth - deltaW;
+      let y = baseHeight - deltaH;
+      if (x <= 0 || y <= 0) {
+          this.zoomLevel--;
+          return;
+      }
+
+      this.viewportSizeStr = `${deltaW} ${deltaH} ${x} ${y}`;
+
+      this.draw(this.data);
+  }
+
+  zoomIn() {
+      this.zoomLevel++;
+      this.resizeViewport();
+  }
+
+  zoomOut() {
+      this.zoomLevel--;
+      this.resizeViewport();
+  }
+
 
   draw(data) {
     d3.select("#train").selectAll('*').remove();
-    let h = window.innerHeight;
+    let h = window.innerHeight - 75;
     let w = window.innerWidth;
     let originX = w / 2;
     let originY = h / 2;
 
     let dataset = [150, 300, 450, 600];
 
-    let svgContainer = d3.select("#train").append("svg")
-      .attr("width", w - 20)
-      .attr("height", h - 20);
+    let svgContainer = d3.select("#train")
+      .attr("width", w - 30)
+      .attr("height", h - 30);
 
     svgContainer.selectAll("circle")
       .data(dataset)
@@ -40,6 +77,11 @@ export class MapComponent implements OnInit {
       .attr("class","circ")
       .style("fill", "none")
       .style("stroke", "black")
+      .style("stroke-dasharray", "5,5")
+      .style("stroke-width", "2.5")
+      .attr("stroke-opacity", function (d) {
+      return 1 - (((d/150 - 1)/10)*3);
+    })
       .attr("r", function (d) {
         return d;
       })
@@ -103,6 +145,20 @@ export class MapComponent implements OnInit {
         .attr("width",24)
         .attr("class","material-icons")
         .text("star");
+       let tex = svgContainer.append("text")
+        .attr("x", originX + (diff.lon / 2))
+        .attr("y", originY + (diff.lat / 2) + 36)
+        .attr("text-anchor","middle")
+        .attr("height",24)
+        .text(data.pois[index].name);
+      let bbox = (tex.node() as any).getBBox();
+      let padding = 2;
+      let rect = svgContainer.insert("rect", "text")
+        .attr("x", bbox.x - padding)
+        .attr("y", bbox.y - padding)
+        .attr("width", bbox.width + (padding*2))
+        .attr("height", bbox.height + (padding*2))
+        .style("fill", "white");
     });
 
     svgContainer.append("circle")
@@ -110,11 +166,13 @@ export class MapComponent implements OnInit {
       .attr("cy", originY)
       .attr("r", 20)
       .style("fill", "black");
-    svgContainer.append("image")
-      .attr("xlink:href", "DerKleineICE.png")
-      .attr("x", originX)
-      .attr("y", originY)
-      .attr("height", "150px");
+
+    svgContainer.append("svg:image")
+      .attr("xlink:href", "/assets/DerKleineICE.png")
+      .attr("x", originX - 25)
+      .attr("y", originY - 75)
+      .attr("height", 152.5)
+      .attr("width", 57.75);
   }
 
 }
