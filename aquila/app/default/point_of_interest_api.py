@@ -83,12 +83,14 @@ def get_poi(poi):
     npoi['linkUrls'] = urls
     return npoi
 
+
 def get_point_of_interest_json(train_latitude, train_longitude):
     result = requests.get("http://api.wikunia.de/sights/api.php?lat=" + str(train_latitude) + "&lon=" +
                           str(train_longitude) + "&rad=0.05&limit=10")
     r_json = json.loads(result.text)
     pois=[]
-    gjson = {}
+    gjson = {'latitude': train_latitude, 'longitude': train_longitude}
+
 
     for _, poi in r_json.items():
         if isinstance(poi, dict):
