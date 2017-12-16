@@ -1,3 +1,20 @@
-<p>
-  list works!
-</p>
+<table class="table is-striped is-fullwidth">
+    <tr *ngFor="let poi of listData; index as i" (click)="submit(i)" style="cursor: pointer;">
+        <td style="width: 70px !important;">
+            <div
+                style="width: 64px; height: 64px; position: relative; display: flex; justify-content: center; overflow: hidden;"
+            >
+                <img [src]="poi.oldData.profilePicture" style="height: 64px; position: absolute; top: 0px; left: 0px; width: auto; max-width: none;">
+            </div>
+        </td>
+        <td style="font-size: 140%;">
+            {{poi.oldData.name}}
+        </td>
+        <td style="font-size: 120%;">
+            {{poi.distance.toFixed(0)}} m
+        </td>
+        <td>
+            <i class="fa fa-chevron-right has-text-primary" aria-hidden="true"></i>
+        </td>
+    </tr>
+</table>
