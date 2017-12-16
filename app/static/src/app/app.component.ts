@@ -24,6 +24,7 @@ export class AppComponent {
   view: 'start'|'map'|'list';
   overlayDetails = false;
   oldView: string;
+  number = 1;
 
   data: Data;
   selectedPoi: Poi;
@@ -36,7 +37,7 @@ export class AppComponent {
       .subscribe(message => {
         switch(message.sender) {
           case 'start_submit':
-            // never gonna happen :()
+            // never gonna (give you up) happen :()
             break;
           case 'poi_selected':
             this.selectedPoi = message.data;
@@ -51,9 +52,25 @@ export class AppComponent {
   }
 
   ngOnInit() {
-      this.data = this.dataService.get(17);
+    setInterval(this.sendText(), 20000);
       this.title = 'ICE 1337';
       this.view = 'map';
+  }
+
+  sendText() {
+
+      this.dataService.get(this.number)
+        .subscribe(data => {
+            this.data = data
+
+            console.log(data)
+        }
+        , err => {
+          console.log(err);
+          window.alert('Sorry, something went wrong.\n\nPlease try again later :/');
+        }
+      );
+        this.number++;
   }
 
   gotoMap() {

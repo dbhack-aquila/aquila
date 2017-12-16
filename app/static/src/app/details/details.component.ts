@@ -21,15 +21,15 @@ export class DetailsComponent implements OnInit {
 	imageLink = ""
 	imageName = ""
 
-	ngOnInit() {
-		let amount = this.poi.imageUrls.length
+	ngOnInit() {/*
+		let amount = this.poi.relatedPics.length
 		let rest = amount % 3
 		let additional = 0
 		if(rest < 3 && rest > 0){
 			additional = 1
 		}
 		for(var i = 0; i < ((amount - rest) / 3) + additional; i++){
-			this.directPictureLinksLine1.push({url: this.poi.imageUrls[i]})
+			this.directPictureLinksLine1.push({url: this.poi.relatedPics[i]})
 		}
 		if(rest == 2){
 			additional = 2
@@ -38,15 +38,15 @@ export class DetailsComponent implements OnInit {
 			additional = 0
 		}
 		for(i; i < (((amount - rest) / 3) * 2) + additional; i++){
-			this.directPictureLinksLine2.push({url: this.poi.imageUrls[i]})
+			this.directPictureLinksLine2.push({url: this.poi.relatedPics[i]})
 		}
 		for(i; i < amount; i++){
-			this.directPictureLinksLine3.push({url: this.poi.imageUrls[i]})
-		}
+			this.directPictureLinksLine3.push({url: this.poi.relatedPics[i]})
+		}*/
 	}
 
 	showModal(link){
-		this.imageLink = link.url
+		this.imageLink = link
 		this.modalActive = true
 	}
 
