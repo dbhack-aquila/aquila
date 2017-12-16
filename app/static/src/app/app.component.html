@@ -1,11 +1,19 @@
-<nav class="navbar is-primary">
-  <div class="navbar-item title is-4">
-    {{title}}
-  </div>
+<nav class="navbar is-fixed-top is-primary" style="flex-wrap: wrap;">
+    <div style="flex-basis: 100%;">
+        <div class="navbar-item title is-4" style="margin-bottom: 0px;">
+            <i *ngIf="overlayDetails" class="fa fa-chevron-left" style="cursor: pointer; margin-right: 7px;" (click)="closeDetails()"></i> {{title}}
+        </div>
+    </div>
+    <div class="tabs is-boxed is-fullwidth" style="flex-basis: 100%;" *ngIf="((view == 'map') || (view == 'list')) && (!overlayDetails)">
+        <ul>
+            <li [class.is-active]="view == 'map'" (click)="gotoMap()"><a>Map</a></li>
+            <li [class.is-active]="view == 'list'" (click)="gotoList()"><a>List</a></li>
+        </ul>
+    </div>
 </nav>
 
 <app-start *ngIf="view == 'start'"></app-start>
-<app-map *ngIf="view == 'map'" [data]="data"></app-map>
-<app-list *ngIf="view == 'list'" [data]="data"></app-list>
-<app-details *ngIf="view == 'details'" [poi]="data.pois[0]"></app-details>
+<app-map *ngIf="view == 'map'" [data]="data" [class.hide]="overlayDetails"></app-map>
+<app-list *ngIf="view == 'list'" [data]="data" [class.hide]="overlayDetails"></app-list>
+<app-details *ngIf="overlayDetails" [poi]="selectedPoi"></app-details>
 

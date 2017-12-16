@@ -11,6 +11,7 @@ import { ListComponent } from './list/list.component';
 
 import { DataService } from "./data.service";
 import { MessageService } from "./message.service";
+import { DistanceCalcService } from "./distance-calc.service";
 
 
 const appRoutes: Routes = [
@@ -35,7 +36,8 @@ const appRoutes: Routes = [
   ],
   providers: [
     DataService,
-    MessageService
+    MessageService,
+    DistanceCalcService
   ],
   bootstrap: [AppComponent]
 })

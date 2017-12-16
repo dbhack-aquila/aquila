@@ -12,7 +12,7 @@ export class DetailsComponent implements OnInit {
 
     @Input() poi: Poi;
 
-  constructor() { }
+	constructor() { }
 
     directPictureLinksLine1 = []
 	directPictureLinksLine2 = []
