@@ -25,7 +25,7 @@ export class AppComponent {
     overlayDetails = false;
     liveViewPaused = false;
     oldView: string;
-    number = 1;
+    number = 2000;
 
     data: Data;
     selectedPoi: Poi;
@@ -53,7 +53,7 @@ export class AppComponent {
     }
 
     ngOnInit() {
-        Observable.timer(0, 10000)
+        Observable.timer(0, 6000)
         //               ^ delay (ms) before first call
         //                   ^ delay (ms) between each subsequent call
             .exhaustMap((value, index) => {
@@ -70,7 +70,7 @@ export class AppComponent {
                     this.view = 'map';
                 }
 
-                this.number += 100;
+                this.number += 250;
 
                 return {};
             })
