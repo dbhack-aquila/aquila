@@ -1,0 +1,54 @@
+h1 {
+	font-weight: bold;
+}
+
+#profilePicture {
+	width: 100%;
+}
+
+#profileContainer {
+	align-items: center;
+	display: flex;
+	max-height:300px;
+	overflow: hidden;
+}
+
+#figureProfile {
+	border: 1px solid green;
+	position: relative;
+	display: inline-block;
+}
+
+#name {
+	margin-bottom: 40px;
+}
+
+#bottomPart {
+	margin: 10px 30px;
+}
+
+.vscrolling {
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.pictures {
+	display:inline-block;
+	padding:5px;
+	width:96px;
+	height:96px;
+}
+
+.picturebox {
+	max-height:400px;
+	position:relative;
+	margin-bottom:50px;
+}
+
+.inline {
+	display: inline-block;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
