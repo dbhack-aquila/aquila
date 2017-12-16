@@ -1,5 +1,5 @@
 <div id="profileContainer">
-  <img id="profilePicture" src={{poi.imageUrl}} (click)="showModal(poi.imageUrl)" />
+  <img id="profilePicture" *ngIf="poi.imageUrl" [src]="poi.imageUrl" (click)="showModal(poi.imageUrl)" />
 </div>
 <div id="bottomPart">
   <h4 id="name" class="title is-3">
