@@ -140,6 +140,7 @@ def browse(trainid, time):
     return jsonify(dict(gjson))
 
 
+@app.route('/')
 @app.route('/<path:file_path>')
 def default_route(file_path='index.html'):
     return send_from_directory('app/static/dist', file_path)
