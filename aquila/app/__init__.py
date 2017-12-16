@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_profile import Profiler
 
-from config import config
+from aquila.config import config
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -18,9 +18,8 @@ def create_app(config_name):
 	app.register_blueprint(default_blueprint)
 
 	# Rest APIs
-	from app.default import rest_train
 
-	# Initialize any extensions we are using
+    # Initialize any extensions we are using
 	bootstrap.init_app(app)
 	db.init_app(app)
 

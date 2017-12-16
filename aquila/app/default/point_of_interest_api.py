@@ -1,4 +1,6 @@
 import pandas as pd
+from . import default
+import wikipedia
 import json
 from flask import jsonify
 import re
@@ -7,27 +9,6 @@ import multiprocessing
 import requests
 import urllib
 import hashlib
-
-
-from flask import Flask, render_template, send_file, redirect, send_from_directory, request
-app = Flask(__name__)
-
-
-def get_first_image(wikipedia_page):
-    htmlcode = wikipedia_page.html()
-    try:
-        imgcode = re.search('<img.*src=".*".*/>', htmlcode).group(0)
-        imagecode_array = imgcode.split()
-        for imagecode_part in imagecode_array:
-            if "src=" in imagecode_part:
-                imagecode_array = imagecode_part.split('"')
-                break
-        for imagecode_part in imagecode_array:
-            if "//" in imagecode_part:
-                image_url = "https:" + imagecode_part.split("thumb/")[0] + imagecode_part.split("thumb/")[1].rsplit("/",1)[0]
-                return image_url
-    except:
-        return ''
 
 
 def get_wikidata_id(article):
@@ -62,7 +43,6 @@ def get_wikipage(article):
     ret = requests.get(query).json()
     pid = next(iter(ret["query"]["pages"]))
     dat = ret["query"]["pages"][pid]
-    print(dat)
     exc = dat["extract"]
     url = dat["fullurl"]
     try:
@@ -81,7 +61,6 @@ def get_wikidata_desc(wikidata_id):
     dapp = urllib.parse.urlencode({'action':'wbgetentities','ids':get_wikidata_id(wikidata_id),'languages':'de'})
     query_string = "https://www.wikidata.org/w/api.php?" + dapp
     res = requests.get(query_string).text
-    print(query_string)
     item = json.loads(res)
 
     wdata = item["entities"][wikidata_id]["descriptions"]["de"]["value"]
@@ -94,7 +73,6 @@ def get_poi(poi):
     npoi = {}
     urls = []
     npoi['name'] = poi
-    print("Halooooooooooooo", poi)
     pid, exc, url, img_path, img_dump = get_wikipage(poi)
     npoi['description'] = exc
     npoi['latitude'] = float(lat)
@@ -105,21 +83,16 @@ def get_poi(poi):
     npoi['linkUrls'] = urls
     return npoi
 
-
-@app.route('/gps/<float:train_latitude>/<float:train_longitude>')
-def browse(train_latitude, train_longitude):
+def get_point_of_interest_json(train_latitude, train_longitude):
     result = requests.get("http://api.wikunia.de/sights/api.php?lat=" + str(train_latitude) + "&lon=" +
                           str(train_longitude) + "&rad=0.05&limit=10")
     r_json = json.loads(result.text)
     pois=[]
     gjson = {}
-    print(r_json)
 
     for _, poi in r_json.items():
         if isinstance(poi, dict):
-            print(poi['sight'])
             pois.append(poi['sight']+";lat"+poi['lat']+";lon"+poi['lon'])
-    print(len(pois))
 
     poi_list = []
 
@@ -132,12 +105,3 @@ def browse(train_latitude, train_longitude):
 
     gjson['pois'] = poi_list
     return jsonify(dict(gjson))
-
-
-@app.route('/')
-@app.route('/<path:file_path>')
-def default_route(file_path='index.html'):
-    return send_from_directory('app/static/dist', file_path)
-
-if __name__ == '__main__':
-    app.run()
