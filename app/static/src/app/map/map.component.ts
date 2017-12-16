@@ -185,7 +185,7 @@ export class MapComponent implements OnInit {
       .attr("x", originX - 25 + (this.zoomLevel * 5))
       .attr("y", originY - 75 + (this.zoomLevel * 5))
       .attr("height", (this.zoomLevel * -10) + 152.5)
-      .attr("width", (this.zoomLevel * -10) + 57.75); 
+      .attr("width", (this.zoomLevel * -10) + 57.75);
   }
 
   submitter(i) {
