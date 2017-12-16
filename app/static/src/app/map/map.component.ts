@@ -1,5 +1,4 @@
 import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
-import { MessageService } from './../message.service';
 
 import * as d3 from 'd3/index';
 
