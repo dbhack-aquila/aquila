@@ -8,6 +8,7 @@ import os
 import multiprocessing
 import requests
 import urllib
+import hashlib
 
 
 df = 0
@@ -52,26 +53,38 @@ def get_first_image(thumbnail_url):
 
 def get_wikidata_id(article):
     """Find the Wikidata ID for a given Wikipedia article."""
-    query_string = "https://de.wikipedia.org/w/api.php?action=query&prop=pageprops&ppprop=wikibase_item&redirects=1&format=json&titles=" + article
+    dapp = urllib.parse.urlencode({"action": "query",
+                                "prop": "pageprops",
+                                "ppprop":"wikibase_item",
+                                "redirects": 1,
+                                "format": "json",
+                                "titles": article})
+    query_string = "https://de.wikipedia.org/w/api.php?%s" % dapp
 
     ret = requests.get(query_string).json()
     id = next(iter(ret["query"]["pages"]))
+    # TODO: Catch the case where article has no Wikidata ID
+    # This can happen for new or seldomly edited articles
     return ret["query"]["pages"][id]["pageprops"]["wikibase_item"]
+
 
 def get_wikidata_image(wikidata_id):
     """Return the image for the Wikidata item with *wikidata_id*. """
-    query_string = "https://www.wikidata.org/wiki/Special:EntityData/%s.json" % wikidata_id
+    query_string = ("https://www.wikidata.org/wiki/Special:EntityData/%s.json"
+                    % wikidata_id)
     item = json.loads(requests.get(query_string).text)
 
     wdata = item["entities"][wikidata_id]["claims"]
 
     try:
-        image_url = "https://commons.wikimedia.org/wiki/File:%s" % wdata["P18"][0]["mainsnak"]["datavalue"]["value"]
+        image = wdata["P18"][0]["mainsnak"]["datavalue"]["value"].replace(" ", "_")
     except KeyError:
         print("No image on Wikidata.")
     else:
-        return image_url.replace(" ", "_")
-        #lat, lon = wdata["P625"][0]["mainsnak"]["datavalue"]["value"]["latitude"], wdata["P625"][0]["mainsnak"]["datavalue"]["value"]["longitude"]
+        md = hashlib.md5(image.encode('utf-8')).hexdigest()
+        image_url = ("https://upload.wikimedia.org/wikipedia/commons/thumb/%s/%s/%s/64px-%s"
+                     % (md[0], md[:2], image, image))
+        return image_url
 
 def get_wikidata_desc(wikidata_id):
     """Return the image for the Wikidata item with *wikidata_id*. """
@@ -138,3 +151,7 @@ def browse(trainid, time):
     gjson['pois'] = poi_list
     return jsonify(dict(gjson))
 
+if __name__ == "__main__":
+    wid = get_wikidata_id("Limburger Dom")
+    image_url = get_wikidata_image(wid)
+    print(image_url)
