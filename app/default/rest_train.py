@@ -87,10 +87,10 @@ def get_poi(poi):
     npoi['name'] = poi
     wid = get_wikidata_id(poi)
     info = wikipedia.page(poi)
-    npoi['description'] = info.summary # get_wikidata_desc(poi)
+    npoi['description'] = info.summary  # get_wikidata_desc(poi)
     npoi['latitude'] = float(lat)
     npoi['longitude'] = float(lon)
-    npoi['imageUrl'] = get_wikidata_image(wid)
+    npoi['imageUrl'] = get_first_image(info)  # get_wikidata_image(wid)
     urls.append(info.url)
     npoi['linkUrls'] = urls
     return npoi
