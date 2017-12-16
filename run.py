@@ -4,8 +4,8 @@ import wikipedia
 import json
 
 wikipedia.set_lang("de")
-path = "C:\\Users\\PaulBauriegel\\Downloads\\20171212_wifionice\\surveyor_hackathon_data_20171212.csv"
-df = pd.read_csv(path, sep=';', decimal='.', skiprows=0, nrows=100)    # Read one row
+path = os.path.dirname(os.path.abspath(__file__)) + "/app/default/surveyor_hackathon_data_20171212.csv"
+df = pd.read_csv(path, sep=';', decimal='.', skiprows=0, nrows=1)    # Read one row
 df = df[df['sid'] == 40117905]
 df = df.filter(items=['gps_breite', 'gps_laenge'])
 df.rename(columns={'gps_laenge': 'longitude', 'gps_breite': 'latitude'}, inplace=True)
