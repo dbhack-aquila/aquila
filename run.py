@@ -8,6 +8,8 @@ import requests
 import urllib
 import hashlib
 
+from app.default.poi import get_osm_pois
+
 
 from flask import Flask, render_template, send_file, redirect, send_from_directory, request
 app = Flask(__name__)
@@ -46,20 +48,39 @@ def get_wikidata_id(article):
     return ret["query"]["pages"][id]["pageprops"]["wikibase_item"]
 
 
-def get_wikidata_image(wikidata_id):
-    """Return the image for the Wikidata item with *wikidata_id*. """
-    query_string = "https://www.wikidata.org/wiki/Special:EntityData/%s.json" % wikidata_id
-    item = json.loads(requests.get(query_string).text)
+def get_wikidata(wikidata_id):
+    """Return the image and description of the Wikidata item with *wikidata_id*.
+    """
+    query_string = ("https://www.wikidata.org/wiki/Special:EntityData/%s.json"
+                    % wikidata_id)
+    item = requests.get(query_string).json()
 
     wdata = item["entities"][wikidata_id]["claims"]
 
     try:
-        image_url = "https://commons.wikimedia.org/wiki/File:%s" % wdata["P18"][0]["mainsnak"]["datavalue"]["value"]
+        image = wdata["P18"][0]["mainsnak"]["datavalue"]["value"]
     except KeyError:
         print("No image on Wikidata.")
+        image_url = ""
+        info_url = ""
     else:
-        return image_url.replace(" ", "_")
-        #lat, lon = wdata["P625"][0]["mainsnak"]["datavalue"]["value"]["latitude"], wdata["P625"][0]["mainsnak"]["datavalue"]["value"]["longitude"]
+        md = hashlib.md5(image.encode('utf-8')).hexdigest()
+        image_url = (
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/%s/%s/%s/64px-%s"
+                % (md[0], md[:2], image, image))
+        info_url = ("https://commons.wikimedia.org/wiki/File:%s" % image)
+
+    try:
+        wikipedia_article = item["entities"][wikidata_id]["sitelinks"]["dewiki"]["url"]
+    except KeyError:
+        wikipedia_article = ""
+
+    try:
+        description = item["entities"][wikidata_id]["descriptions"]["de"]["value"]
+    except KeyError:
+        description = ""
+
+    return wikipedia_article, description, image_url, info_url
 
 
 def get_wikipage(article):
@@ -114,29 +135,21 @@ def browse(trainid, time):
     df_temp = df[df['sid'] == trainid]
     gjson = df_temp.iloc[time].to_dict()
 
-    result = requests.get("http://api.wikunia.de/sights/api.php?lat=" + str(df_temp.iloc[time]['trainLatitude']) + "&lon=" + str(df_temp.iloc[time]['trainLongitude']) + "&rad=0.05&limit=10")
-    #print(str(df_temp.iloc[time]['trainLatitude']), str(df_temp.iloc[time]['trainLongitude']))
-    rJson = json.loads(result.text)
-    pois=[]
-    print(rJson)
+    pois = get_osm_pois(df_temp.iloc[time]['trainLatitude'],
+                        df_temp.iloc[time]['trainLongitude'],
+                        5.0)
 
-    for _, poi in rJson.items():
-        if isinstance(poi, dict):
-            print(poi['sight'])
-            pois.append(poi['sight']+";lat"+poi['lat']+";lon"+poi['lon'])
-    print(len(pois))
+    for poi in pois:
+        wikipedia_article, description, image_url, info_url = get_wikidata(poi["wikidata_id"])
 
-    #pois = wikipedia.geosearch(df_temp.iloc[time]['trainLatitude'], df_temp.iloc[time]['trainLongitude'])
-    poi_list = []
+        poi["name"] = wikipedia_article
+        poi["description"] = description
+        poi["imageUrl"] = image_url
+        poi["infoUrl"] = info_url
+        poi["linkUrls"] = ["https://de.wikipedia.org/wiki/%s"
+                           % wikipedia_article.replace(" ", "_")]
 
-    #pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
-    #poi_list = pool.map(get_poi, pois)
-    #pool.close()
-
-    for i in pois:
-       poi_list.append(get_poi(i))
-
-    gjson['pois'] = poi_list
+    gjson['pois'] = pois
     return jsonify(dict(gjson))
 
 
