@@ -5,15 +5,18 @@ from flask import Flask, send_from_directory, jsonify
 app = Flask(__name__)
 
 
-@app.route('/gps/<float:train_latitude>/<float:train_longitude>')
-def point_of_interest_api(train_latitude, train_longitude):
+@app.route('/pointsOfInterest')
+def point_of_interest_api():
+    json_file = get_status()
+    train_latitude = json_file['latitude']
+    train_longitude = json_file['longitude']
     return get_point_of_interest_json(train_latitude, train_longitude)
 
-@app.route('/api1/rs/status')
+@app.route('/icePortal/status')
 def ice_portal_status_api():
     return jsonify(dict(get_status()))
 
-@app.route('/api1/rs/tripInfo')
+@app.route('/icePortal/tripInfo')
 def ice_portal_trip_info_api():
     return jsonify(dict(get_trip_info()))
 
