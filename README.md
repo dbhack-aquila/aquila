@@ -8,8 +8,8 @@ This Project was built at [8th DB Hackathon](https://dbmindbox.com/en/db-opendat
 - Kilian Kluge
 - Florian Proske
 - Jan-Philipp Schröder
-- Joshua Töpfer
-- Luca Vazzano (\@lvgermany)
+- Joshua Töpfer ([\@joshuatoepfer](https://twitter.com/joshuatoepfer))
+- Luca Vazzano ([\@lvgermany](https://twitter.com/lvgermany))
 
 ## Use Case
 Train trips aren't always that fun, because of that we want to give you the opportunity to explore your surroundings and learn about them.
