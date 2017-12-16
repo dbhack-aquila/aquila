@@ -75,7 +75,7 @@ def get_wikipage(article):
         img = dat["pageimage"]
         imgmd5 = hashlib.md5(img.encode('utf-8')).hexdigest()
         img_path = "https://upload.wikimedia.org/wikipedia/commons/" + imgmd5[:1] + "/" + imgmd5[:2] + "/" + img
-        img_dump = "https://upload.wikimedia.org/wikipedia/commons/thumb/%s/%s/%s/64px-%s"\
+        img_dump = "https://upload.wikimedia.org/wikipedia/commons/thumb/{}/{}/{}/64px-{}"\
             .format(imgmd5[:1], imgmd5[:2], img, img)
     except KeyError:
         img_path = ""
