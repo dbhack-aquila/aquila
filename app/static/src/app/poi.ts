@@ -1,19 +1,20 @@
 export class Poi {
     public name: string;
     public description: string;
-    public profilePicture: string;
+    public imageUrl: string;
     public latitude: number;
     public longitude: number;
-    public linkUrls: [string];
-    public imageUrls: [string];
+    public linkUrls: string[];
+    public relatedPics: string[];
 
-    constructor(name: string, description: string, profilePicture: string, latitude: number, longitude: number, linkUrls: [string], imageUrls: [string]) {
+    constructor(description: string, imageUrl: string, latitude: number, linkUrls: [string], longitude: number, name: string) {
         this.name = name;
         this.description = description;
-        this.profilePicture = profilePicture;
+        this.imageUrl = imageUrl;
         this.latitude = latitude;
         this.longitude = longitude;
         this.linkUrls = linkUrls;
-        this.imageUrls = imageUrls;
+        this.relatedPics = [];
+        this.relatedPics.push(imageUrl);
     }
 }

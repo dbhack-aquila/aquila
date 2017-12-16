@@ -1,5 +1,5 @@
 <div id="profileContainer">
-  <img id="profilePicture" src={{poi.profilePicture}} />
+  <img id="profilePicture" src={{poi.imageUrl}} (click)="showModal(poi.imageUrl)" />
 </div>
 <div id="bottomPart">
   <h4 id="name" class="title is-3">
@@ -23,7 +23,7 @@
         <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>   <a href="{{el}}">{{el}}</a>
       </li>
     </ul>
-  </div>
+  </div><!--
   <div class="box picturebox vscrolling">
     <h1 class="subtitle is-5">Related Pictures</h1>
     <div class="nowrap">
@@ -40,7 +40,7 @@
       <span *ngFor="let link of directPictureLinksLine3" class="image pictures">
         <img [src]="link.url" (click)="showModal(link)" alt=""/>
       </span>
-    </div>
+    </div>-->
     <div *ngIf="modalActive" (click)="closeModal()" class="modal is-active">
         <div class="modal-background"></div>
         <div class="modal-content">
@@ -50,6 +50,6 @@
         </div>
         <button (click)="closeModal()" class="modal-close is-large" aria-label="close"></button>
     </div>
-  </div>
+  <!--/div-->
 </div>
 
