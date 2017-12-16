@@ -33,6 +33,3 @@ def get_osm_pois(lat, lon, box_size):
                              "longitude": float(node.attrib["lon"]),
                              "wikidata": tag.attrib["v"]})
     return pois
-
-
-print(get_osm_pois(52.0, 11.3, 30))
