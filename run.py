@@ -75,9 +75,12 @@ def get_wikipage(article):
         img = dat["pageimage"]
         imgmd5 = hashlib.md5(img.encode('utf-8')).hexdigest()
         img_path = "https://upload.wikimedia.org/wikipedia/commons/" + imgmd5[:1] + "/" + imgmd5[:2] + "/" + img
+        img_dump = "https://upload.wikimedia.org/wikipedia/commons/thumb/{}/{}/{}/64px-{}"\
+            .format(imgmd5[:1], imgmd5[:2], img, img)
     except KeyError:
         img_path = ""
-    return [pid,exc,url,img_path]
+        img_dump = ""
+    return [pid,exc,url,img_path, img_dump]
 
 def get_wikidata_desc(wikidata_id):
     """Return the image for the Wikidata item with *wikidata_id*. """
@@ -98,11 +101,12 @@ def get_poi(poi):
     urls = []
     npoi['name'] = poi
     print("Halooooooooooooo", poi)
-    pid, exc, url, img_path = get_wikipage(poi)
+    pid, exc, url, img_path, img_dump = get_wikipage(poi)
     npoi['description'] = exc
     npoi['latitude'] = float(lat)
     npoi['longitude'] = float(lon)
     npoi['imageUrl'] = img_path
+    npoi['thumbnailUrl'] = img_dump
     urls.append(url)
     npoi['linkUrls'] = urls
     return npoi
