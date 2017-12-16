@@ -79,6 +79,7 @@ def get_wikipage(article):
             .format(imgmd5[:1], imgmd5[:2], img, img)
     except KeyError:
         img_path = ""
+        img_dump = ""
     return [pid,exc,url,img_path, img_dump]
 
 def get_wikidata_desc(wikidata_id):
