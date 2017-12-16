@@ -31,16 +31,26 @@ export class AppComponent {
       .subscribe(message => {
         switch(message.sender) {
           case 'start_submit':
-            this.data = this.dataService.get(message.data.sid, 17);
-            this.title = message.data.name;
-            this.view = 'map';
+            // never gonna happen :()
             break;
         }
       });
+
+    this.view = 'start';
+    this.title = 'Welcome';
   }
 
   ngOnInit() {
-      this.view = 'start';
-      this.title = "Welcome";
+      this.data = this.dataService.get(17);
+      this.title = 'ICE 1337';
+      this.view = 'map';
+  }
+
+  gotoMap() {
+    this.view = 'map';
+  }
+
+  gotoList() {
+    this.view = 'list';
   }
 }

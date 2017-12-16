@@ -9,7 +9,7 @@ export class DataService {
 
   constructor() { }
 
-  get(trainNumber: string, no: number) {
+  get(no: number) {
       return new Data(
           52.514436,
           13.418947,

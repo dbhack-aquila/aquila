@@ -1,0 +1,3 @@
+.tabs>ul>li:not(.is-active)>a {
+    color: #aeaeae;
+}

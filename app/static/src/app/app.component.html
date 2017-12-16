@@ -1,8 +1,16 @@
-<nav class="navbar is-primary">
-  <div class="navbar-item title is-4">
-    {{title}}
-  </div>
-</nav>
+<div class="navbar is-primary" style="flex-wrap: wrap;">
+    <div style="flex-basis: 100%;">
+        <div class="navbar-item title is-4" style="margin-bottom: 0px;">
+            {{title}}
+        </div>
+    </div>
+    <div class="tabs is-boxed is-fullwidth" style="flex-basis: 100%;" *ngIf="(view == 'map') || (view == 'list')">
+        <ul>
+            <li [class.is-active]="view == 'map'" (click)="gotoMap()"><a>Map</a></li>
+            <li [class.is-active]="view == 'list'" (click)="gotoList()"><a>List</a></li>
+        </ul>
+    </div>
+</div>
 
 <app-start *ngIf="view == 'start'"></app-start>
 <app-map *ngIf="view == 'map'" [data]="data"></app-map>
