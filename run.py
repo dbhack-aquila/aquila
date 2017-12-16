@@ -88,25 +88,15 @@ def get_wikidata(wikidata_id):
     return wikipedia_article, description, thumb_url, image_url, info_url
 
 
-def get_wikipage(article):
+def get_wikipedia(article):
     query = "https://de.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageprops|info|extracts|pageimages" \
             "&ppprop=wikibase_item&piprop=name&pilimit=20&inprop=url&exintro=&explaintext=&titles=" + article
     ret = requests.get(query).json()
     pid = next(iter(ret["query"]["pages"]))
     dat = ret["query"]["pages"][pid]
-    print(dat)
     exc = dat["extract"]
-    url = dat["fullurl"]
-    try:
-        img = dat["pageimage"]
-        imgmd5 = hashlib.md5(img.encode('utf-8')).hexdigest()
-        img_path = "https://upload.wikimedia.org/wikipedia/commons/" + imgmd5[:1] + "/" + imgmd5[:2] + "/" + img
-        img_dump = "https://upload.wikimedia.org/wikipedia/commons/thumb/{}/{}/{}/64px-{}"\
-            .format(imgmd5[:1], imgmd5[:2], img, img)
-    except KeyError:
-        img_path = ""
-        img_dump = ""
-    return [pid,exc,url,img_path, img_dump]
+
+    return exc
 
 def get_wikidata_desc(wikidata_id):
     """Return the image for the Wikidata item with *wikidata_id*. """
@@ -154,7 +144,7 @@ def browse(trainid, time):
         wikipedia_article, description, thumb_url, image_url, info_url = get_wikidata(poi["wikidata"])
 
         poi["name"] = wikipedia_article
-        poi["description"] = description
+        poi["description"] = get_wikipedia(wikipedia_article)
         poi["imageUrl"] = image_url
         poi["thumbnailUrl"] = thumb_url
         poi["infoUrl"] = info_url
