@@ -2,6 +2,18 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import { Data } from './../data';
 
+import { MessageService } from './../message.service';
+
+
+class Train {
+    public sid: string;
+    public name: string;
+
+    constructor(sid: string, name: string) {
+        this.sid = sid;
+        this.name = name;
+    }
+}
 
 @Component({
   selector: 'app-start',
@@ -10,11 +22,27 @@ import { Data } from './../data';
 })
 export class StartComponent implements OnInit {
 
-  @Input() data: Data;
+  trains = [
+      new Train('40117905', 'ICE 1337'),
+      new Train('40117905', 'ICE 42')
+  ];
 
-  constructor() { }
+  selectedId: number;
+  ready: boolean;
+
+  constructor(private messageService: MessageService) { }
 
   ngOnInit() {
+    this.ready = false;
+  }
+
+  onChange(value) {
+      this.selectedId = value;
+      this.ready = true;
+  }
+
+  submit() {
+    this.messageService.sendMessage('start_submit', this.trains[this.selectedId]);
   }
 
 }
