@@ -7,6 +7,7 @@ import re
 import os
 import multiprocessing
 import requests
+import urllib
 
 
 df = 0
@@ -72,8 +73,11 @@ def get_wikidata_image(wikidata_id):
 
 def get_wikidata_desc(wikidata_id):
     """Return the image for the Wikidata item with *wikidata_id*. """
-    query_string = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids={}&languages=de".format(wikidata_id)
-    item = json.loads(requests.get(query_string).text)
+    dapp = urllib.parse.urlencode({'action':'wbgetentities','ids':get_wikidata_id(wikidata_id),'languages':'de'})
+    query_string = "https://www.wikidata.org/w/api.php?" + dapp
+    res = requests.get(query_string).text
+    print(query_string)
+    item = json.loads(res)
 
     wdata = item["entities"][wikidata_id]["descriptions"]["de"]["value"]
     return wdata
@@ -90,11 +94,11 @@ def get_poi(poi):
     urls = []
     npoi['name'] = poi
     info = wikipedia.page(poi)
-    npoi['description'] = info.summary
+    npoi['description'] = info.summary # get_wikidata_desc(poi)
     try:
         cord = info.coordinates
     except:
-        cord = [lat,lon]
+        cord = [lat, lon]
     npoi['latitude'] = float(cord[0])
     npoi['longitude'] = float(cord[1])
     npoi['imageUrl'] = get_first_image(info)
@@ -126,6 +130,9 @@ def browse(trainid, time):
     pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
     poi_list = pool.map(get_poi, pois)
     pool.close()
+
+    #for i in pois:
+     #   poi_list.append(get_poi(i))
 
     gjson['pois'] = poi_list
     return jsonify(dict(gjson))
