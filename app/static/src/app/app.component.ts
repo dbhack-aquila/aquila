@@ -23,6 +23,7 @@ export class AppComponent {
     title = 'app';
     view: 'start'|'map'|'list';
     overlayDetails = false;
+    liveViewPaused = false;
     oldView: string;
     number = 1;
 
@@ -59,8 +60,10 @@ export class AppComponent {
                 return this.dataService.get(this.number)
             })
             .scan((acc, value, index) => {
-                this.data = value;
-                console.log(this.data);
+                if ( !(this.liveViewPaused) ) {
+                    this.data = value;
+                    console.log(this.data);
+                }
 
                 if (this.view == 'start') {
                     this.title = 'ICE 1337';
@@ -90,5 +93,9 @@ export class AppComponent {
     closeDetails() {
         this.title = 'ICE 1337';
         this.overlayDetails = false;
+    }
+
+    toggleLiveView() {
+        this.liveViewPaused = !this.liveViewPaused;
     }
 }

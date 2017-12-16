@@ -9,3 +9,12 @@
 .hide {
     display: none;
 }
+
+.button {
+    background-color: #F01414;
+    border-color: #ffffff;
+}
+
+.button * {
+    color: #ffffff;
+}

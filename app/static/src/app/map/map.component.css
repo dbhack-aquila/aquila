@@ -1,3 +1,6 @@
 .button {
     background-color: #f9f7f7;
 }
+circle {
+  pointer-events: visible;
+}
