@@ -1,4 +1,5 @@
 import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
+import { MessageService } from './../message.service';
 
 import * as d3 from 'd3/index';
 
@@ -20,7 +21,7 @@ export class MapComponent implements OnInit {
     zoomLevel = 0;
     viewportSizeStr: string;
 
-  constructor() { }
+  constructor(private messageService: MessageService) { }
 
   ngOnInit() {}
 
@@ -138,6 +139,7 @@ export class MapComponent implements OnInit {
         .style("fill", "black")
         .append("i")
         .attr("class","material-icons")
+        .attr("onclick","submit(" + index + ");")
         .text("star");//<i class="material-icons">star</i>
       svgContainer.append("image")
         .attr("xlink:href", "https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_star_white_24px.svg")
@@ -176,5 +178,10 @@ export class MapComponent implements OnInit {
       .attr("height", 152.5)
       .attr("width", 57.75);
   }
+
+  submit(i) {
+        this.messageService.sendMessage('poi_selected', this.data.pois[i]);
+        console.log(this.data.pois[i]);
+    }
 
 }
