@@ -4,6 +4,8 @@ import * as d3 from 'd3/index';
 
 import { Data } from './../data';
 
+import { MessageService } from './../message.service';
+
 
 @Component({
   selector: 'app-map',
@@ -20,7 +22,7 @@ export class MapComponent implements OnInit {
     zoomLevel = 0;
     viewportSizeStr: string;
 
-  constructor() { }
+  constructor(private messageService: MessageService) { }
 
   ngOnInit() {}
 
@@ -138,8 +140,8 @@ export class MapComponent implements OnInit {
           .attr("class", "cirir")
           .style("fill", "black")
           .style("pointer-events","visible");
-        circ.on("click", function() {
-          alert(currentValue);
+        circ.on("click", () => {
+          this.messageService.sendMessage('poi_selected', currentValue);
         });
 
 
@@ -152,8 +154,8 @@ export class MapComponent implements OnInit {
         .attr("class","material-icons")
         .text("star")
         .style("pointer-events","visible");
-      imgCirc.on("click", function() {
-        alert(currentValue);
+      imgCirc.on("click", () => {
+        this.messageService.sendMessage('poi_selected', currentValue);
       });
        let tex = svgContainer.append("text")
         .attr("x", originX + (diff.lon / 2))
