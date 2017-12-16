@@ -29,8 +29,8 @@ def get_osm_pois(lat, lon, box_size):
     for node in root.findall("node"):
         for tag in node.findall("tag"):
             if tag.attrib["k"] == "wikidata":
-                pois.append({"latitude": node.attrib["lat"],
-                             "longitude": node.attrib["lon"],
+                pois.append({"latitude": float(node.attrib["lat"]),
+                             "longitude": float(node.attrib["lon"]),
                              "wikidata": tag.attrib["v"]})
     return pois
 
