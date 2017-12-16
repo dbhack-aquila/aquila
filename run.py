@@ -12,13 +12,6 @@ import hashlib
 from flask import Flask, render_template, send_file, redirect, send_from_directory, request
 app = Flask(__name__)
 
-# pandas
-path = os.path.abspath("app/default/surveyor_hackathon_data_20171212.csv")
-df = pd.read_csv(path, sep=';', decimal='.', skiprows=0, nrows=100000)  # Read one row
-df = df.sort_values('created')
-df = df.filter(items=['sid', 'gps_breite', 'gps_laenge'])
-df.rename(columns={'gps_laenge': 'trainLongitude', 'gps_breite': 'trainLatitude'}, inplace=True)
-
 
 def get_first_image(wikipedia_page):
     htmlcode = wikipedia_page.html()
@@ -39,7 +32,8 @@ def get_first_image(wikipedia_page):
 
 def get_wikidata_id(article):
     """Find the Wikidata ID for a given Wikipedia article."""
-    query_string = "https://de.wikipedia.org/w/api.php?action=query&prop=pageprops&ppprop=wikibase_item&redirects=1&format=json&titles=" + article
+    query_string = "https://de.wikipedia.org/w/api.php?action=query&prop=pageprops&ppprop=wikibase_item&redirects=1" \
+                   "&format=json&titles=" + article
 
     ret = requests.get(query_string).json()
     id = next(iter(ret["query"]["pages"]))
