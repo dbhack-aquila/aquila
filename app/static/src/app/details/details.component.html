@@ -1,3 +1,55 @@
-<p>
-  details works!
-</p>
+<div id="profileContainer">
+  <img id="profilePicture" src={{poi.profilePicture}} />
+</div>
+<div id="bottomPart">
+  <h4 id="name" class="title is-3">
+    {{poi.name}}
+  </h4>
+  <div class="box">
+  <h1 class="subtitle is-5">Description</h1>
+    <p>
+      {{poi.description}}
+    </p>
+  </div>
+  <div class="box">
+  <h1 class="subtitle is-5">Coordinates</h1>
+    Latitude: {{poi.latitude}}<br>
+    Longitude: {{poi.longitude}}
+  </div>
+  <div class="box">
+  <h1 class="subtitle is-5">Related Links</h1>
+    <ul>
+      <li *ngFor="let el of poi.linkUrls">
+        <a href="{{el}}">{{el}}</a>
+      </li>
+    </ul>
+  </div>
+  <div class="box picturebox vscrolling">
+    <h1 class="subtitle is-5">Related Pictures</h1>
+    <div class="nowrap">
+      <span *ngFor="let link of directPictureLinksLine1" class="image pictures">
+        <img [src]="link.url" (click)="showModal(link)" alt=""/>
+      </span>
+    </div>
+    <div class="nowrap">
+      <span *ngFor="let link of directPictureLinksLine2" class="image pictures">
+        <img [src]="link.url" (click)="showModal(link)" alt=""/>
+      </span>
+    </div>
+    <div class="nowrap">
+      <span *ngFor="let link of directPictureLinksLine3" class="image pictures">
+        <img [src]="link.url" (click)="showModal(link)" alt=""/>
+      </span>
+    </div>
+    <div *ngIf="modalActive" (click)="closeModal()" class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <span>
+            <img [src]="imageLink" alt="">
+          </span>
+        </div>
+        <button (click)="closeModal()" class="modal-close is-large" aria-label="close"></button>
+    </div>
+  </div>
+</div>
+

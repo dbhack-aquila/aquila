@@ -24,6 +24,6 @@ export class AppComponent {
 
   ngOnInit() {
       this.data = this.dataService.get("ICE1337", 17);
-      this.view = 'start';
+      this.view = 'details';
   }
 }
