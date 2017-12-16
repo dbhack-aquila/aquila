@@ -182,10 +182,10 @@ export class MapComponent implements OnInit {
 
     svgContainer.append("svg:image")
       .attr("xlink:href", "/assets/DerKleineICE.png")
-      .attr("x", originX - 25)
-      .attr("y", originY - 75)
-      .attr("height", 152.5)
-      .attr("width", 57.75);
+      .attr("x", originX - 25 + (this.zoomLevel * 5))
+      .attr("y", originY - 75 + (this.zoomLevel * 5))
+      .attr("height", (this.zoomLevel * -10) + 152.5)
+      .attr("width", (this.zoomLevel * -10) + 57.75);
   }
 
   submitter(i) {
