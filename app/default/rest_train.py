@@ -25,7 +25,7 @@ def init():
     # TODO sort by time
 
 
-def get_first_image(wikipedia_page):
+def get_first_image_thumbnail(wikipedia_page):
     htmlcode = wikipedia_page.html()
     try:
         imgcode = re.search('<img.*src=".*".*/>', htmlcode).group(0)
@@ -36,10 +36,20 @@ def get_first_image(wikipedia_page):
                 break
         for imagecode_part in imagecode_array:
             if "//" in imagecode_part:
-                image_url = "https:" + imagecode_part.split("thumb/")[0] + imagecode_part.split("thumb/")[1].rsplit("/",1)[0]
-                return image_url
+                return "https:" + imagecode_part
+
     except:
         return ''
+
+
+def get_first_image(thumbnail_url):
+    try:
+        if thumbnail_url == "":
+            return ""
+        return thumbnail_url.split("thumb/")[0] + thumbnail_url.split("thumb/")[1].rsplit("/", 1)[0]
+    except:
+        return ''
+
 
 def get_wikidata_id(article):
     """Find the Wikidata ID for a given Wikipedia article."""
@@ -100,10 +110,12 @@ def get_poi(poi):
     npoi['name'] = poi
     wid = get_wikidata_id(poi)
     info = wikipedia.page(poi)
-    npoi['description'] = info.summary # get_wikidata_desc(poi)
+    npoi['description'] = info.summary  # get_wikidata_desc(poi)
     npoi['latitude'] = float(lat)
     npoi['longitude'] = float(lon)
-    npoi['imageUrl'] = get_wikidata_image(wid)
+    thumbnail_url = get_first_image_thumbnail(info)
+    npoi['thumbnailUrl'] = thumbnail_url
+    npoi['imageUrl'] = get_first_image(thumbnail_url)  # get_wikidata_image(wid)
     urls.append(info.url)
     npoi['linkUrls'] = urls
     return npoi
@@ -134,7 +146,7 @@ def browse(trainid, time):
     pool.close()
 
     #for i in pois:
-     #   poi_list.append(get_poi(i))
+    #    poi_list.append(get_poi(i))
 
     gjson['pois'] = poi_list
     return jsonify(dict(gjson))
