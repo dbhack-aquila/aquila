@@ -57,3 +57,4 @@ def browse(trainid, time):
         poi_list.append(npoi)
     gjson['pois'] = poi_list
     return jsonify(dict(gjson))
+
