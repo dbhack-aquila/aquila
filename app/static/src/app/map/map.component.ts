@@ -19,7 +19,7 @@ export class MapComponent implements OnInit {
     @ViewChild('train') svgElement;
 
     zoomStep = 0.1;
-    zoomLevel = 0;
+    zoomLevel = -5;
     viewportSizeStr: string;
 
   constructor(private messageService: MessageService) { }
