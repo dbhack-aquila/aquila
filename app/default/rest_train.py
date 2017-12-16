@@ -8,6 +8,7 @@ import os
 import multiprocessing
 import requests
 import urllib
+import hashlib
 
 
 df = 0
@@ -24,7 +25,7 @@ def init():
     # TODO sort by time
 
 
-def get_first_image(wikipedia_page):
+def get_first_image_thumbnail(wikipedia_page):
     htmlcode = wikipedia_page.html()
     try:
         imgcode = re.search('<img.*src=".*".*/>', htmlcode).group(0)
@@ -35,33 +36,55 @@ def get_first_image(wikipedia_page):
                 break
         for imagecode_part in imagecode_array:
             if "//" in imagecode_part:
-                image_url = "https:" + imagecode_part.split("thumb/")[0] + imagecode_part.split("thumb/")[1].rsplit("/",1)[0]
-                return image_url
+                return "https:" + imagecode_part
+
     except:
         return ''
 
+
+def get_first_image(thumbnail_url):
+    try:
+        if thumbnail_url == "":
+            return ""
+        return thumbnail_url.split("thumb/")[0] + thumbnail_url.split("thumb/")[1].rsplit("/", 1)[0]
+    except:
+        return ''
+
+
 def get_wikidata_id(article):
     """Find the Wikidata ID for a given Wikipedia article."""
-    query_string = "https://de.wikipedia.org/w/api.php?action=query&prop=pageprops&ppprop=wikibase_item&redirects=1&format=json&titles=" + article
+    dapp = urllib.parse.urlencode({"action": "query",
+                                "prop": "pageprops",
+                                "ppprop":"wikibase_item",
+                                "redirects": 1,
+                                "format": "json",
+                                "titles": article})
+    query_string = "https://de.wikipedia.org/w/api.php?%s" % dapp
 
     ret = requests.get(query_string).json()
     id = next(iter(ret["query"]["pages"]))
+    # TODO: Catch the case where article has no Wikidata ID
+    # This can happen for new or seldomly edited articles
     return ret["query"]["pages"][id]["pageprops"]["wikibase_item"]
+
 
 def get_wikidata_image(wikidata_id):
     """Return the image for the Wikidata item with *wikidata_id*. """
-    query_string = "https://www.wikidata.org/wiki/Special:EntityData/%s.json" % wikidata_id
+    query_string = ("https://www.wikidata.org/wiki/Special:EntityData/%s.json"
+                    % wikidata_id)
     item = json.loads(requests.get(query_string).text)
 
     wdata = item["entities"][wikidata_id]["claims"]
 
     try:
-        image_url = "https://commons.wikimedia.org/wiki/File:%s" % wdata["P18"][0]["mainsnak"]["datavalue"]["value"]
+        image = wdata["P18"][0]["mainsnak"]["datavalue"]["value"].replace(" ", "_")
     except KeyError:
         print("No image on Wikidata.")
     else:
-        return image_url.replace(" ", "_")
-        #lat, lon = wdata["P625"][0]["mainsnak"]["datavalue"]["value"]["latitude"], wdata["P625"][0]["mainsnak"]["datavalue"]["value"]["longitude"]
+        md = hashlib.md5(image.encode('utf-8')).hexdigest()
+        image_url = ("https://upload.wikimedia.org/wikipedia/commons/thumb/%s/%s/%s/64px-%s"
+                     % (md[0], md[:2], image, image))
+        return image_url
 
 def get_wikidata_desc(wikidata_id):
     """Return the image for the Wikidata item with *wikidata_id*. """
@@ -90,7 +113,9 @@ def get_poi(poi):
     npoi['description'] = info.summary  # get_wikidata_desc(poi)
     npoi['latitude'] = float(lat)
     npoi['longitude'] = float(lon)
-    npoi['imageUrl'] = get_first_image(info)  # get_wikidata_image(wid)
+    thumbnail_url = get_first_image_thumbnail(info)
+    npoi['thumbnailUrl'] = thumbnail_url
+    npoi['imageUrl'] = get_first_image(thumbnail_url)  # get_wikidata_image(wid)
     urls.append(info.url)
     npoi['linkUrls'] = urls
     return npoi
@@ -121,8 +146,12 @@ def browse(trainid, time):
     pool.close()
 
     #for i in pois:
-     #   poi_list.append(get_poi(i))
+    #    poi_list.append(get_poi(i))
 
     gjson['pois'] = poi_list
     return jsonify(dict(gjson))
 
+if __name__ == "__main__":
+    wid = get_wikidata_id("Limburger Dom")
+    image_url = get_wikidata_image(wid)
+    print(image_url)
