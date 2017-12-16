@@ -73,7 +73,7 @@ def get_wikipage(article):
     url = dat["fullurl"]
     try:
         img = dat["pageimage"]
-        imgmd5 = hashlib.md5("img".encode('utf-8')).hexdigest()
+        imgmd5 = hashlib.md5(img.encode('utf-8')).hexdigest()
         img_path = "https://upload.wikimedia.org/wikipedia/commons/" + imgmd5[:1] + "/" + imgmd5[:2] + "/" + img
     except KeyError:
         img_path = ""
