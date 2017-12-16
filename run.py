@@ -112,30 +112,26 @@ def get_poi(poi):
     return npoi
 
 
-@app.route('/gps/<int:trainid>/<int:time>')
-def browse(trainid, time):
-    global df
-    df_temp = df[df['sid'] == trainid]
-    gjson = df_temp.iloc[time].to_dict()
-
-    result = requests.get("http://api.wikunia.de/sights/api.php?lat=" + str(df_temp.iloc[time]['trainLatitude']) + "&lon=" + str(df_temp.iloc[time]['trainLongitude']) + "&rad=0.05&limit=10")
-    #print(str(df_temp.iloc[time]['trainLatitude']), str(df_temp.iloc[time]['trainLongitude']))
-    rJson = json.loads(result.text)
+@app.route('/gps/<float:train_latitude>/<float:train_longitude>')
+def browse(train_latitude, train_longitude):
+    result = requests.get("http://api.wikunia.de/sights/api.php?lat=" + str(train_latitude) + "&lon=" +
+                          str(train_longitude) + "&rad=0.05&limit=10")
+    r_json = json.loads(result.text)
     pois=[]
-    print(rJson)
+    gjson = {}
+    print(r_json)
 
-    for _, poi in rJson.items():
+    for _, poi in r_json.items():
         if isinstance(poi, dict):
             print(poi['sight'])
             pois.append(poi['sight']+";lat"+poi['lat']+";lon"+poi['lon'])
     print(len(pois))
 
-    #pois = wikipedia.geosearch(df_temp.iloc[time]['trainLatitude'], df_temp.iloc[time]['trainLongitude'])
     poi_list = []
 
-    #pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
-    #poi_list = pool.map(get_poi, pois)
-    #pool.close()
+    # pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+    # poi_list = pool.map(get_poi, pois)
+    # pool.close()
 
     for i in pois:
        poi_list.append(get_poi(i))
