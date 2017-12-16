@@ -48,7 +48,7 @@ export class AppComponent {
             });
 
         this.view = 'start';
-        this.title = 'Welcome';
+        this.title = 'Welcome to Aquila';
     }
 
     ngOnInit() {
