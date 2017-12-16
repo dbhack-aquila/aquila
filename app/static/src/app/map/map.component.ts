@@ -131,22 +131,30 @@ export class MapComponent implements OnInit {
 
     data.pois.forEach((currentValue, index, array) => {
       let diff = measure(data.trainLatitude, data.trainLongitude, data.pois[index].latitude, data.pois[index].longitude);
-      svgContainer.append("circle")
-        .attr("cx", originX + (diff.lon / 2))
-        .attr("cy", originY + (diff.lat / 2))
-        .attr("r", 20)
-        .style("fill", "black")
-        .append("i")
-        .attr("class","material-icons")
-        .text("star");//<i class="material-icons">star</i>
-      svgContainer.append("image")
+        let circ = svgContainer.append("circle")
+          .attr("cx", originX + (diff.lon / 2))
+          .attr("cy", originY + (diff.lat / 2))
+          .attr("r", 20)
+          .attr("class", "cirir")
+          .style("fill", "black")
+          .style("pointer-events","visible");
+        circ.on("click", function() {
+          alert(currentValue);
+        });
+
+
+      let imgCirc = svgContainer.append("image")
         .attr("xlink:href", "https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_star_white_24px.svg")
         .attr("x", originX + (diff.lon / 2)-12)
         .attr("y", originY + (diff.lat / 2)-12)
         .attr("height",24)
         .attr("width",24)
         .attr("class","material-icons")
-        .text("star");
+        .text("star")
+        .style("pointer-events","visible");
+      imgCirc.on("click", function() {
+        alert(currentValue);
+      });
        let tex = svgContainer.append("text")
         .attr("x", originX + (diff.lon / 2))
         .attr("y", originY + (diff.lat / 2) + 36)
