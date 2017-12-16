@@ -1,7 +1,7 @@
 <nav class="navbar is-fixed-top is-primary" style="flex-wrap: wrap;">
     <div style="flex-basis: 100%;">
         <div class="navbar-item title is-4" style="margin-bottom: 0px; color: #fafafa;">
-            <i *ngIf="overlayDetails" class="fa fa-chevron-left" style="cursor: pointer; margin-right: 7px;" (click)="closeDetails()"></i> {{title}}
+            <button *ngIf="overlayDetails" class="button is-primary"><i class="fa fa-chevron-left" style="cursor: pointer; margin-right: 7px;" (click)="closeDetails()"></i></button> {{title}}
         </div>
     </div>
     <div class="tabs is-boxed is-fullwidth" style="flex-basis: 100%;" *ngIf="((view == 'map') || (view == 'list')) && (!overlayDetails)">
@@ -18,4 +18,3 @@
 <app-map *ngIf="view == 'map'" [data]="data" [class.hide]="overlayDetails"></app-map>
 <app-list *ngIf="view == 'list'" [data]="data" [class.hide]="overlayDetails"></app-list>
 <app-details *ngIf="overlayDetails" [poi]="selectedPoi"></app-details>
-
