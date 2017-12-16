@@ -1,7 +1,7 @@
 <nav class="navbar is-fixed-top is-primary" style="flex-wrap: wrap;">
     <div style="flex-basis: 100%;">
         <div class="navbar-item title is-4" style="margin-bottom: 0px; color: #fafafa;">
-            <button *ngIf="overlayDetails" class="button" (click)="closeDetails()"><i class="fa fa-chevron-left" style="cursor: pointer; margin-right: 7px;"></i></button> {{title}} <button *ngIf="(view == 'map') || (view == 'list')" class="button" style="position: fixed; top: 7px; right: 7px;" (click)="toggleLiveView()"><i class="fa" [class.fa-pause]="!liveViewPaused" [class.fa-play]="liveViewPaused" style="cursor: pointer;"></i></button>
+            <button *ngIf="overlayDetails" class="button" style="margin-right: 7px;" (click)="closeDetails()"><i class="fa fa-chevron-left" style="cursor: pointer;"></i></button> {{title}} <button *ngIf="(view == 'map') || (view == 'list')" class="button" style="position: fixed; top: 7px; right: 7px;" (click)="toggleLiveView()"><i class="fa" [class.fa-pause]="!liveViewPaused" [class.fa-play]="liveViewPaused" style="cursor: pointer;"></i></button>
         </div>
     </div>
     <div class="tabs is-boxed is-fullwidth" style="flex-basis: 100%;" *ngIf="((view == 'map') || (view == 'list')) && (!overlayDetails)">
