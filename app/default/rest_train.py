@@ -5,6 +5,8 @@ import json
 from flask import jsonify
 import re
 import os
+import multiprocessing
+
 
 df = 0
 wikipedia.set_lang("de")
@@ -32,9 +34,22 @@ def get_first_image(wikipedia_page):
             break
     for imagecode_part in imagecode_array:
         if "//" in imagecode_part:
-            image_url = "https:"+ imagecode_part.split("thumb/")[0] + imagecode_part.split("thumb/")[1].rsplit("/",1)[0]
+            image_url = "https:" + imagecode_part.split("thumb/")[0] + imagecode_part.split("thumb/")[1].rsplit("/",1)[0]
             return image_url
 
+
+def get_poi(poi):
+    npoi = {}
+    urls = []
+    npoi['name'] = poi
+    info = wikipedia.page(poi)
+    npoi['description'] = info.summary
+    npoi['latitude'] = float(info.coordinates[0])
+    npoi['longitude'] = float(info.coordinates[1])
+    npoi['imageUrl'] = get_first_image(info)
+    urls.append(info.url)
+    npoi['linkUrls'] = urls
+    return npoi
 
 @default.route('/gps/<int:trainid>/<int:time>')
 def browse(trainid, time):
@@ -43,17 +58,11 @@ def browse(trainid, time):
     gjson = df_temp.iloc[time].to_dict()
     pois = wikipedia.geosearch(df_temp.iloc[time]['trainLatitude'], df_temp.iloc[time]['trainLongitude'])
     poi_list = []
-    for e in pois:
-        npoi = {}
-        urls = []
-        npoi['name'] = e
-        info = wikipedia.page(e)
-        npoi['description'] = info.summary
-        npoi['latitude'] = float(info.coordinates[0])
-        npoi['longitude'] = float(info.coordinates[1])
-        npoi['imageUrl'] = get_first_image(info)
-        urls.append(info.url)
-        npoi['linkUrls'] = urls
-        poi_list.append(npoi)
+
+    pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+    poi_list = pool.map(get_poi, pois)
+    pool.close()
+
     gjson['pois'] = poi_list
     return jsonify(dict(gjson))
+
