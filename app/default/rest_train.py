@@ -90,7 +90,7 @@ def get_poi(poi):
     npoi['description'] = info.summary  # get_wikidata_desc(poi)
     npoi['latitude'] = float(lat)
     npoi['longitude'] = float(lon)
-    npoi['imageUrl'] = get_first_image(poi)  # get_wikidata_image(wid)
+    npoi['imageUrl'] = get_first_image(info)  # get_wikidata_image(wid)
     urls.append(info.url)
     npoi['linkUrls'] = urls
     return npoi
