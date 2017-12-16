@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
 
 import * as d3 from 'd3/index';
 
@@ -22,7 +22,9 @@ export class MapComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngOnChanges() {
       this.draw(this.data);
 
       this.resizeViewport();

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 
 import { Data } from './../data';
 import { Poi } from './../poi';
@@ -29,7 +29,9 @@ export class ListComponent implements OnInit {
 
     constructor(private distanceCalcService: DistanceCalcService, private messageService: MessageService) { }
 
-    ngOnInit() {
+    ngOnInit() {}
+
+    ngOnChanges() {
         this.listData = [];
 
         for (let i = 0; i < this.data.pois.length; i++) {
