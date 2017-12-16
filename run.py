@@ -58,34 +58,39 @@ def get_wikidata(wikidata_id):
     wdata = item["entities"][wikidata_id]["claims"]
 
     try:
-        image = wdata["P18"][0]["mainsnak"]["datavalue"]["value"]
+        image = wdata["P18"][0]["mainsnak"]["datavalue"]["value"].replace(" ", "_")
     except KeyError:
         print("No image on Wikidata.")
         image_url = ""
         info_url = ""
+        thumb_url = ""
     else:
         md = hashlib.md5(image.encode('utf-8')).hexdigest()
-        image_url = (
+        thumb_url = (
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/%s/%s/%s/64px-%s"
                 % (md[0], md[:2], image, image))
+        image_url = (
+                "https://upload.wikimedia.org/wikipedia/commons/%s/%s/%s"
+                % (md[0], md[:2], image))
         info_url = ("https://commons.wikimedia.org/wiki/File:%s" % image)
 
     try:
-        wikipedia_article = item["entities"][wikidata_id]["sitelinks"]["dewiki"]["url"]
-    except KeyError:
+        wikipedia_article = item["entities"][wikidata_id]["sitelinks"]["dewiki"]["title"]
+    except (KeyError, TypeError):
         wikipedia_article = ""
 
     try:
+        print(item["entities"][wikidata_id]["descriptions"])
         description = item["entities"][wikidata_id]["descriptions"]["de"]["value"]
-    except KeyError:
+    except (KeyError, TypeError):
         description = ""
 
-    return wikipedia_article, description, image_url, info_url
+    return wikipedia_article, description, thumb_url, image_url, info_url
 
 
 def get_wikipage(article):
     query = "https://de.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageprops|info|extracts|pageimages" \
-            "&ppprop=wikibase_item&piprop=name&pilimit=20&inprop=url&exintro=&explaintext=&titles="+ article
+            "&ppprop=wikibase_item&piprop=name&pilimit=20&inprop=url&exintro=&explaintext=&titles=" + article
     ret = requests.get(query).json()
     pid = next(iter(ret["query"]["pages"]))
     dat = ret["query"]["pages"][pid]
@@ -142,13 +147,16 @@ def browse(trainid, time):
     pois = get_osm_pois(df_temp.iloc[time]['trainLatitude'],
                         df_temp.iloc[time]['trainLongitude'],
                         5.0)
-
+    print(pois)
     for poi in pois:
-        wikipedia_article, description, image_url, info_url = get_wikidata(poi["wikidata_id"])
+        print(poi['wikidata'])
+        print(get_wikidata(poi['wikidata']))
+        wikipedia_article, description, thumb_url, image_url, info_url = get_wikidata(poi["wikidata"])
 
         poi["name"] = wikipedia_article
         poi["description"] = description
         poi["imageUrl"] = image_url
+        poi["thumbnailUrl"] = thumb_url
         poi["infoUrl"] = info_url
         poi["linkUrls"] = ["https://de.wikipedia.org/wiki/%s"
                            % wikipedia_article.replace(" ", "_")]
@@ -163,4 +171,4 @@ def default_route(file_path='index.html'):
     return send_from_directory('app/static/dist', file_path)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
