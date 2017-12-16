@@ -2,6 +2,10 @@
     color: #aeaeae;
 }
 
+.is-active * {
+    color: #F01414;
+}
+
 .hide {
     display: none;
 }
