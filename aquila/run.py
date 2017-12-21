@@ -24,7 +24,8 @@ def ice_portal_trip_info_api():
 @app.route('/')
 @app.route('/<path:file_path>')
 def default_route(file_path='index.html'):
-    return send_from_directory('aquila/app/static/dist', file_path)
+    print("Static call")
+    return send_from_directory('app/static/dist', file_path)
 
 
 if __name__ == '__main__':
