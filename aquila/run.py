@@ -7,9 +7,9 @@ app = Flask(__name__)
 
 @app.route('/pointsOfInterest')
 def point_of_interest_api():
-    json_file = get_status()
-    train_latitude = json_file['latitude']
-    train_longitude = json_file['longitude']
+    status_dict = get_status()
+    train_latitude = status_dict['latitude']
+    train_longitude = status_dict['longitude']
     return get_point_of_interest_json(train_latitude, train_longitude)
 
 @app.route('/icePortal/status')
