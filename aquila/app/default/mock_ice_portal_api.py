@@ -9,7 +9,7 @@ fake_coordinates = 0
 
 def init_fake_status():
     global fake_coordinates
-    path = os.path.abspath("aquila/app/default/surveyor_hackathon_data_20171212.csv")
+    path = os.path.abspath("app/default/surveyor_hackathon_data_20171212.csv")
     fake_coordinates = pd.read_csv(path, sep=';', decimal='.', skiprows=0, nrows=100000)
     fake_coordinates = fake_coordinates[fake_coordinates['sid'] == 40117905]
     fake_coordinates = fake_coordinates.sort_values('created')
