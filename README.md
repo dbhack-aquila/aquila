@@ -23,3 +23,18 @@ For the point of interests we used different approaches. First we tried the wiki
 
 ## Prospect
 In the future you could implement our solution into the ICE portal of Deutsche Bahn, where it could use the positioning system of the Train. You could also build a augmented reality version of our solution or also a augmented window solution like shown in [this article](https://www.golem.de/news/innovation-train-deutsche-bahn-kooperiert-mit-hyperloop-1607-122408.html).
+
+## Run the project
+```bash
+cd aquila
+wget http://download-data.deutschebahn.com/static/datasets/wifi/20171212_wifionice.zip
+unzip 20171212_wifionice.zip && rm 20171212_wifionice.zip
+mv surveyor_hackathon_data_20171212.csv app/default/surveyor_hackathon_data_20171212.csv
+
+cd app/static
+npm install
+npm run build
+
+cd ../../..
+python3 run.py
+```

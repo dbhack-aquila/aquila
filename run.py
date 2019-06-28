@@ -67,6 +67,8 @@ def get_wikipage(article):
             "&ppprop=wikibase_item&piprop=name&pilimit=20&inprop=url&exintro=&explaintext=&titles="+ article
     ret = requests.get(query).json()
     pid = next(iter(ret["query"]["pages"]))
+    if pid == "-1":
+        return ["-1","","","", ""]
     dat = ret["query"]["pages"][pid]
     print(dat)
     exc = dat["extract"]
