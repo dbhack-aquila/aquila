@@ -35,6 +35,7 @@ cd app/static
 npm install
 npm run build
 
-cd ../../..
+cd ../..
+python3 -m pip install -r requirements.txt
 python3 run.py
 ```
